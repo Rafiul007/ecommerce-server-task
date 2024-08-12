@@ -1,20 +1,31 @@
 const Product = require("../models/Product");
-
-// Fetch all products
+const { Op } = require("sequelize");
+// Fetch all products with optional search and pagination
 const getAllProducts = async (req, res) => {
-  const { page = 1, limit = 10 } = req.query; 
+  const { page = 1, limit = 10, name = "" } = req.query;
 
   const offset = (page - 1) * limit;
 
   try {
-    // Fetch paginated products
+    // Fetch paginated products with case-insensitive search
     const products = await Product.findAll({
-      limit: parseInt(limit, 10), 
-      offset: parseInt(offset, 10) 
+      where: {
+        name: {
+          [Op.like]: `%${name}%`,
+        },
+      },
+      limit: parseInt(limit, 10),
+      offset: parseInt(offset, 10),
     });
 
-    // Fetch total count of products
-    const totalProducts = await Product.count();
+    // Fetch total count of products matching the search term
+    const totalProducts = await Product.count({
+      where: {
+        name: {
+          [Op.like]: `%${name}%`,
+        },
+      },
+    });
 
     res.status(200).json({
       status: "success",
@@ -23,8 +34,8 @@ const getAllProducts = async (req, res) => {
         totalItems: totalProducts,
         totalPages: Math.ceil(totalProducts / limit),
         currentPage: parseInt(page, 10),
-        itemsPerPage: parseInt(limit, 10)
-      }
+        itemsPerPage: parseInt(limit, 10),
+      },
     });
   } catch (error) {
     res.status(500).json({

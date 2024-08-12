@@ -32,7 +32,6 @@ const options = {
         User: UserSchema,
         Product: ProductSchema,
         Order: OrderSchema,
-        // Define other schemas here (e.g., Product, Order)
       },
     },
     security: [
