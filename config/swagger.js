@@ -3,6 +3,7 @@ require('dotenv').config();
 
 const UserSchema = require('../Schema/userSchema');
 const ProductSchema = require('../Schema/productSchema');
+const OrderSchema = require('../Schema/orderSchema');
 const port = process.env.PORT ;
 
 const options = {
@@ -30,6 +31,7 @@ const options = {
       schemas: {
         User: UserSchema,
         Product: ProductSchema,
+        Order: OrderSchema,
         // Define other schemas here (e.g., Product, Order)
       },
     },
