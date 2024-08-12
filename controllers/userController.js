@@ -124,6 +124,54 @@ const getProfile = async (req, res) => {
   }
 };
 
+
+// Update user profile (except email)
+const updateProfile = async (req, res) => {
+  const { name, password } = req.body;
+  const id = req.user.id;
+
+  try {
+    const user = await User.findByPk(id);
+    if (!user) {
+      return res.status(404).json({
+        status: "error",
+        message: "User not found",
+      });
+    }
+
+    // Update name if provided
+    if (name) {
+      user.name = name;
+    }
+
+    // Update password if provided
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      user.password = hashedPassword;
+    }
+
+    // Save updated user data
+    await user.save();
+
+    res.status(200).json({
+      status: "success",
+      message: "Profile updated successfully",
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email, 
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
+  }
+};
+
+
 //refresh token
 const refreshToken = (req, res) => {
   const { refreshToken } = req.body;
@@ -139,4 +187,4 @@ const refreshToken = (req, res) => {
 };
 
 
-module.exports = { registerUser, loginUser, getProfile, refreshToken };
+module.exports = { registerUser, loginUser, getProfile,updateProfile, refreshToken };
