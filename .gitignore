@@ -19,6 +19,11 @@ coverage/
 # dotenv environment variables file
 .env
 
+# Docker and Compose files
+docker-compose.yml
+docker-compose*.yml
+*.env
+
 # Next.js build output
 .next/
 out/
@@ -66,3 +71,15 @@ Thumbs.db
 # Build output
 build/
 dist/
+
+# SQL dump files
+*.sql
+*.sql.gz
+
+# Secrets and keys
+secrets.*.yaml
+values.*.yaml
+
+# Temporary files
+tmp/
+temp/
